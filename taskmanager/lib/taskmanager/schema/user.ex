@@ -16,6 +16,8 @@ defmodule Taskmanager.Schema.User do
     user
     |> cast(params, [:first_name, :last_name, :email_id, :contact, :uuid])
     |> validate_required([:first_name, :last_name, :email_id, :contact, :uuid])
+    |> validate_format(:email_id, ~r/@/)
+
   end
 
 end

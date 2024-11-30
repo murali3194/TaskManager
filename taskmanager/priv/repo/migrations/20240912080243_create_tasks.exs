@@ -2,7 +2,8 @@ defmodule Taskmanager.Repo.Migrations.CreateTasks do
   use Ecto.Migration
 
   def change do
-    create table(:tasks) do
+    create table(:tasks, primary_key: false) do
+      add(:task_id, :bigserial, primary_key: true)
       add(:title, :string)
       add(:description, :text)
       add(:due_date, :utc_datetime)

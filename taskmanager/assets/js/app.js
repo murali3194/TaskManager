@@ -21,9 +21,60 @@ import "phoenix_html"
 import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
+import "flowbite/dist/flowbite.phoenix.js";
+
+
+import { DataTable } from "simple-datatables";
+
+if (document.getElementById("pagination-table")) {
+   
+const myTable = document.querySelector("#pagination-table");
+const dataTable = new DataTable(myTable)
+}
+
+
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}})
+let Hooks = {}
+Hooks.LocalTime = {
+    mounted(){
+      this.updated()
+    },
+    updated() {
+      let duedatestring = this.el.getAttribute('datetime');
+      console.log("duedatestring", duedatestring)
+      let updatedDate = new Date(duedatestring);
+      console.log("updatedDate", updatedDate)
+
+      let isoupdatedDate = new Date(updatedDate.getTime() + updatedDate.getTimezoneOffset() * 60000).toISOString()
+      console.log("isoupdatedDate", isoupdatedDate)
+
+      let expireDatetime = new Date(isoupdatedDate)
+      console.log("expireDatetime", expireDatetime)
+     
+     
+      let todayDate = new Date();
+      console.log("todayDate", todayDate)
+
+      let isotodayDate = todayDate.toISOString()
+      console.log("isotodayDate", isotodayDate)
+ 
+
+      let taskstatus = this.el.getAttribute('taskstatus')
+      console.log("taskstatus", taskstatus)
+      if(taskstatus != 'Done' && expireDatetime <= todayDate){
+        this.el.classList.add("bg-red-400")
+      }
+
+      this.el.textContent = expireDatetime
+        this.el.classList.remove("invisible")
+    }
+  }
+  console.log("hooks,",Hooks)
+  
+let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks: Hooks})
+
+
 
 // Show progress bar on live navigation and form submits
 topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})
@@ -38,4 +89,6 @@ liveSocket.connect()
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
+
+
 

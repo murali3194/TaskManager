@@ -217,7 +217,6 @@ defmodule TaskmanagerWeb.CoreComponents do
   attr :type, :string, default: nil
   attr :class, :string, default: nil
   attr :rest, :global, include: ~w(disabled form name value)
-
   slot :inner_block, required: true
 
   def button(assigns) do
@@ -225,7 +224,7 @@ defmodule TaskmanagerWeb.CoreComponents do
     <button
       type={@type}
       class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-zinc-900 hover:bg-zinc-700 py-2 px-3",
+        "phx-submit-loading:opacity-75 rounded-lg bg-blue-600 hover:bg-sky-500 py-2 px-3",
         "text-sm font-semibold leading-6 text-white active:text-white/80",
         @class
       ]}
@@ -265,6 +264,8 @@ defmodule TaskmanagerWeb.CoreComponents do
   attr :name, :any
   attr :label, :string, default: nil
   attr :value, :any
+
+  attr :placeholder, :string, default: nil, doc: "Write your thoughts here..."
 
   attr :type, :string,
     default: "text",
@@ -326,7 +327,7 @@ defmodule TaskmanagerWeb.CoreComponents do
       <select
         id={@id}
         name={@name}
-        class="mt-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-zinc-400 focus:ring-0 sm:text-sm"
+        class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         multiple={@multiple}
         {@rest}
       >
@@ -351,6 +352,7 @@ defmodule TaskmanagerWeb.CoreComponents do
           @errors == [] && "border-zinc-300 focus:border-zinc-400",
           @errors != [] && "border-rose-400 focus:border-rose-400"
         ]}
+        placeholder={"write task description here..."}
         {@rest}
       ><%= Phoenix.HTML.Form.normalize_value("textarea", @value) %></textarea>
       <.error :for={msg <- @errors}><%= msg %></.error>
@@ -425,6 +427,8 @@ defmodule TaskmanagerWeb.CoreComponents do
         <h1 class="text-lg font-semibold leading-8 text-zinc-800">
           <%= render_slot(@inner_block) %>
         </h1>
+        <%!-- bg-gradient-to-r from-cyan-500 to-blue-500 --%>
+
         <p :if={@subtitle != []} class="mt-2 text-sm leading-6 text-zinc-600">
           <%= render_slot(@subtitle) %>
         </p>
@@ -448,6 +452,7 @@ defmodule TaskmanagerWeb.CoreComponents do
   attr :rows, :list, required: true
   attr :row_id, :any, default: nil, doc: "the function for generating the row id"
   attr :row_click, :any, default: nil, doc: "the function for handling phx-click on each row"
+  attr :class, :string, default: nil
 
   attr :row_item, :any,
     default: &Function.identity/1,
@@ -467,8 +472,8 @@ defmodule TaskmanagerWeb.CoreComponents do
 
     ~H"""
     <div class="overflow-y-auto px-4 sm:overflow-visible sm:px-0">
-      <table class="w-[40rem] mt-11 sm:w-full">
-        <thead class="text-sm text-left leading-6 text-zinc-500">
+      <table id="pagination-table" class="w-[40rem] mt-11 sm:w-full">
+        <thead class="sticky top-0 text-sm text-left leading-6 text-blue-600">
           <tr>
             <th :for={col <- @col} class="p-0 pr-6 pb-4 font-normal"><%= col[:label] %></th>
             <th class="relative p-0 pb-4"><span class="sr-only"><%= gettext("Actions") %></span></th>
@@ -486,18 +491,20 @@ defmodule TaskmanagerWeb.CoreComponents do
               class={["relative p-0", @row_click && "hover:cursor-pointer"]}
             >
               <div class="block py-4 pr-6">
-                <span class="absolute -inset-y-px right-0 -left-4 group-hover:bg-zinc-50 sm:rounded-l-xl" />
-                <span class={["relative", i == 0 && "font-semibold text-zinc-900"]}>
+                <span class="absolute -inset-y-px right-0 -left-4 group-hover:bg-blue-100 sm:rounded-l-xl" />
+                <span class={["relative", i == 0 && "font-semibold text-gray-900 dark:text-white"]}>
                   <%= render_slot(col, @row_item.(row)) %>
                 </span>
               </div>
             </td>
             <td :if={@action != []} class="relative w-14 p-0">
               <div class="relative whitespace-nowrap py-4 text-right text-sm font-medium">
-                <span class="absolute -inset-y-px -right-4 left-0 group-hover:bg-zinc-50 sm:rounded-r-xl" />
+                <span class="absolute -inset-y-px -right-4 left-0 group-hover:bg-blue-100 sm:rounded-r-xl" />
                 <span
                   :for={action <- @action}
-                  class="relative ml-4 font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
+                  class={["relative ml-4 font-semibold leading-6 text-blue-600 hover:text-sky-500",
+                  @class
+                  ]}
                 >
                   <%= render_slot(action, @row_item.(row)) %>
                 </span>
@@ -529,7 +536,7 @@ defmodule TaskmanagerWeb.CoreComponents do
     <div class="mt-14">
       <dl class="-my-4 divide-y divide-zinc-100">
         <div :for={item <- @item} class="flex gap-4 py-4 text-sm leading-6 sm:gap-8">
-          <dt class="w-1/4 flex-none text-zinc-500"><%= item.title %></dt>
+          <dt class="w-1/4 flex-none font-semibold text-gray-900 dark:text-white"><%= item.title %> :</dt>
           <dd class="text-zinc-700"><%= render_slot(item) %></dd>
         </div>
       </dl>
@@ -545,6 +552,7 @@ defmodule TaskmanagerWeb.CoreComponents do
       <.back navigate={~p"/posts"}>Back to posts</.back>
   """
   attr :navigate, :any, required: true
+  attr :class, :string, default: nil
   slot :inner_block, required: true
 
   def back(assigns) do
@@ -552,9 +560,11 @@ defmodule TaskmanagerWeb.CoreComponents do
     <div class="mt-16">
       <.link
         navigate={@navigate}
-        class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
+        class={["text-sm font-semibold leading-6 text-blue-600 hover:text-white-500",
+        @class
+        ]}
       >
-        <.icon name="hero-arrow-left-solid" class="h-3 w-3" />
+        <.icon name="hero-chevron-double-left" class="h-4 w-4" />
         <%= render_slot(@inner_block) %>
       </.link>
     </div>
@@ -662,4 +672,50 @@ defmodule TaskmanagerWeb.CoreComponents do
   def translate_errors(errors, field) when is_list(errors) do
     for {^field, {msg, opts}} <- errors, do: translate_error({msg, opts})
   end
+
+
+  attr :date, :string, required: true
+  attr :id, :string, required: true
+  attr :taskstatus, :string, required: true
+
+  def local_time(%{date: date, id: id, taskstatus: taskstatus} = assigns) do
+    ~H"""
+      <time id={@id} datetime={@date} taskstatus={@taskstatus} phx-hook="LocalTime" class="invisible">
+      </time>
+    """
+  end
+
+
+
+  attr :taskstatus, :string, required: true
+
+  def task_status(%{taskstatus: taskstatus} = assigns) do
+   case taskstatus do
+     "In Progress" ->
+                    ~H"""
+                      <span class="inline-flex items-center bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
+                          <span class="w-2 h-2 me-1 bg-yellow-500 rounded-full"></span>
+                          In&nbsp;Progress
+                      </span>
+                    """
+      "To Do" ->
+                 ~H"""
+                      <span class="inline-flex items-center bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-gray-900 dark:text-gray-300">
+                          <span class="w-2 h-2 me-1 bg-gray-500 rounded-full"></span>
+                          To&nbsp;Do
+                      </span>
+                 """
+
+        "Done" ->
+                ~H"""
+                     <span class="inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
+                        <span class="w-2 h-2 me-1 bg-green-500 rounded-full"></span>
+                        Done
+                     </span>
+                """
+   end
+
+  end
+
+
 end

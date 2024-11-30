@@ -1,0 +1,19 @@
+<.header>
+  Task - <%= @task.title %>
+  <:subtitle>This is a task record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/users/#{@task.user_id}/tasks/#{@task.task_id}/edit"}>
+      <.button class="text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 shadow-lg shadow-cyan-500/50 dark:shadow-lg dark:shadow-cyan-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" >Edit task</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Title"><%= @task.title %></:item>
+  <:item title="Description"><%= @task.description %></:item>
+  <%!-- <:item title="Due date"><%= @task.due_date %></:item> --%>
+  <:item title="Due date"><.local_time id="my-date-time" date={@task.due_date} taskstatus={@task.task_status}/></:item>
+  <:item title="Status"><.task_status taskstatus={@task.task_status} /></:item>
+</.list>
+
+<.back class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" navigate={~p"/users/#{@task.user_id}/tasks"}>Back to user task</.back>

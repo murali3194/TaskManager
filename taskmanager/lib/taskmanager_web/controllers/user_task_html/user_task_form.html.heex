@@ -1,0 +1,26 @@
+<.simple_form :let={f} for={@changeset} action={@action}>
+  <.error :if={@changeset.action}>
+    Oops, something went wrong! Please check the errors below.
+  </.error>
+  <.input field={f[:title]} type="text" label="Title" />
+  <.input field={f[:description]} type="textarea" label="Description" />
+  <.input field={f[:due_date]} type="datetime-local" label="Due date" />
+  <.input
+  field={f[:task_status]}
+  type="select"
+  label="Task status"
+  options={[        
+      {gettext("To Do"), "To Do"},
+      {gettext("In Progress"), "In Progress"},
+      {gettext("Done"), "Done"},
+  ]}
+  >
+</.input>
+  <:actions>
+  <%= if @taskaction == "create" do %>
+    <.button class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 shadow-lg shadow-green-500/50 dark:shadow-lg dark:shadow-green-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Save Task</.button>
+  <% else %>
+    <.button class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 shadow-lg shadow-green-500/50 dark:shadow-lg dark:shadow-green-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Update Task</.button>
+  <% end %>
+  </:actions>
+</.simple_form>

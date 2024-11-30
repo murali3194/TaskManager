@@ -9,7 +9,8 @@ module.exports = {
   content: [
     "./js/**/*.js",
     "../lib/*_web.ex",
-    "../lib/*_web/**/*.*ex"
+    "../lib/*_web/**/*.*ex",
+    './node_modules/flowbite/**/*.js'
   ],
   theme: {
     extend: {
@@ -19,6 +20,9 @@ module.exports = {
     },
   },
   plugins: [
+    require('flowbite/plugin')({
+      datatables: true,
+  }),
     require("@tailwindcss/forms"),
     // Allows prefixing tailwind classes with LiveView classes to add rules
     // only when LiveView classes are applied, for example:

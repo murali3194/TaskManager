@@ -18,7 +18,6 @@ defmodule Taskmanager.Schema.TaskTest do
   describe "changeset of task" do
     test "with valid attributes" do
       changeset = Task.changeset(%Task{}, @valid_attrs)
-      IO.inspect(changeset)
       assert changeset.valid?
     end
 

@@ -1,0 +1,63 @@
+<.header>
+  User - <%= @user.first_name %>
+  <:subtitle>This is a user record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/users/#{@user}/edit"}>
+      <.button class="text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 shadow-lg shadow-cyan-500/50 dark:shadow-lg dark:shadow-cyan-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" >Edit user</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<br>
+
+<.list>
+  <:item title="First name"><%= @user.first_name %></:item>
+  <:item title="Last name"><%= @user.last_name %></:item>
+  <:item title="Email"><%= @user.email_id %></:item>
+  <:item title="Contact"><%= @user.contact %></:item>
+</.list>
+
+<.back class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" navigate={~p"/users"}>Back to users</.back>
+
+<br>
+<br>
+
+
+
+<.header>
+  <%= @user.first_name %>'s Task
+  <:subtitle>This is a task record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/users/#{@user}/tasks/new"}>
+      <.button class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">New Task</.button>
+    </.link>
+  </:actions>
+</.header>
+
+
+
+<br>
+<.table id="usertasks" rows={@usertasks} row_click={&JS.navigate(~p"/users/#{&1.user_id}/tasks/#{&1.task_id}")}>
+  <:col :let={usertask} label="Title"><%= usertask.title %></:col>
+  <:col :let={usertask} label="Description"><%= usertask.description %></:col>
+  <%!-- <:col :let={usertask} label="Due date"><%= usertask.due_date %></:col> --%>
+  <:col :let={usertask} label="Due date"><.local_time id="my-date-time" date={usertask.due_date} taskstatus={usertask.task_status}/></:col>    
+  <:col :let={usertask} label="Status"><.task_status taskstatus={usertask.task_status} /></:col>
+  <:action :let={usertask}>
+    <div class="sr-only">
+      <.link navigate={~p"/users/#{usertask.user_id}/tasks/#{usertask.task_id}"}>Show</.link>
+    </div>
+    <.link class="text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 shadow-lg shadow-cyan-500/50 dark:shadow-lg dark:shadow-cyan-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" navigate={~p"/users/#{usertask.user_id}/tasks/#{usertask.task_id}/edit"}>
+    <.icon name="hero-pencil-square" class="h-5 w-5" />
+    Edit
+    </.link>
+  </:action>
+  <:action :let={usertask}>
+    <.link class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" href={~p"/users/#{usertask.user_id}/tasks/#{usertask.task_id}"} method="delete" data-confirm="Are you sure?">
+     <.icon name="hero-trash" class="h-5 w-5" />
+     Delete
+    </.link>
+  </:action>
+</.table>
+
+

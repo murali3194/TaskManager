@@ -1,0 +1,37 @@
+<.header>
+  Listing Users
+  <:actions>
+    <.link href={~p"/users/new/create"}>
+      <.button class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">New User</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<br>
+
+<.table id="users" rows={@users} row_click={&JS.navigate(~p"/users/#{&1}/tasks")}>
+  <:col :let={user} label="First name"><%= user.first_name %></:col>
+  <:col :let={user} label="Last name"><%= user.last_name %></:col>
+  <:col :let={user} label="Email"><%= user.email_id %></:col>
+  <:col :let={user} label="Contact"><%= user.contact %></:col>
+  <:action :let={user}>
+    <%!-- <div class=""> --%>
+      <%!-- <.link class="text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" navigate={~p"/users/#{user}"}>
+      <.icon name="hero-user" class="h-5 w-5" />
+      Show
+      </.link> --%>
+    <%!-- </div> --%>
+    <.link class="text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 shadow-lg shadow-cyan-500/50 dark:shadow-lg dark:shadow-cyan-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" navigate={~p"/users/#{user}/edit"}>
+    <.icon name="hero-pencil-square" class="h-5 w-5" />
+    Edit
+    </.link>
+  </:action>
+  <:action :let={user}>
+    <.link class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" href={~p"/users/#{user}"} method="delete" data-confirm="Are you sure?">
+    <.icon name="hero-trash" class="h-5 w-5" />
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+
